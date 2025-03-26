@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:signify/pages/sightify_asl_page.dart';
+import 'package:signify/passwords.dart';
 import 'package:signify/themes/dark_mode.dart';
 import 'package:signify/themes/light_mode.dart';
 
 void main() {
 
   Gemini.init(
-    apiKey: "AIzaSyBsIixRhnZlP8ugmSZSdpweeidKbT7qj60"
+    apiKey: GEMINI_KEY
   );
   runApp(const MyApp());
 }
