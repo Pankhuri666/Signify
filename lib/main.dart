@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: lightMode,
       darkTheme: darkMode,
+      debugShowCheckedModeBanner: false,
       home: SightifyASLPage(),
     );
   }

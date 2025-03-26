@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:signify/components/round_button.dart';
+import 'package:signify/helpers/get_asset_as_file.dart';
 
 class SightifyASLPage extends StatefulWidget {
   const SightifyASLPage({super.key});
@@ -16,6 +17,8 @@ class SightifyASLPage extends StatefulWidget {
 class _SightifyASLPageState extends State<SightifyASLPage>
     with WidgetsBindingObserver {
   File? _imageFile;
+  late File fs1;
+  late File fs2;
   CameraController? _controller;
   bool _isTakingPicture = false;
   final Gemini gemini = Gemini.instance;
@@ -24,7 +27,13 @@ class _SightifyASLPageState extends State<SightifyASLPage>
   @override
   void initState() {
     super.initState();
+    initSamples();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  Future<void> initSamples() async {
+    fs1 = await getAssetAsFile('assets/help.png');
+    fs2 = await getAssetAsFile('assets/sorry.png');
   }
 
   @override
@@ -72,11 +81,16 @@ class _SightifyASLPageState extends State<SightifyASLPage>
     }
   }
 
+  final List<String> reference = [
+    "Help",
+    "Sorry",
+  ];
+
   void askGemini() {
     log("USING GEMINI");
     gemini.textAndImage(
-      text: "Identify and interpret any sign language gestures in this image. If you see ASL (American Sign Language) gestures, tell me what they mean. Keep the response concise. VERY CONCISE, AROUND 5 WORDS",
-      images: [_imageFile!.readAsBytesSync()],
+      text: "Identify and interpret any sign language gestures in this image. If you see ASL (American Sign Language) gestures, tell me what they mean. Keep the response concise. VERY CONCISE, AROUND 5 WORDS. USE THE SUPPLIED IMAGES as REFERENCE. If the 1st image matches, the references, tell its name. the index of the image and the sign name are -> ${jsonEncode(reference)}",
+      images: [_imageFile!.readAsBytesSync(), fs1.readAsBytesSync(), fs2.readAsBytesSync()],
     ).then(
       (value) {
         // log("RESPONSE FROM GEMINI");
@@ -127,7 +141,7 @@ class _SightifyASLPageState extends State<SightifyASLPage>
             //   bannerIcon: Icons.sign_language,
             //   tilt: 3.14 / 2,
             // ),
-            const Text("Hi"),
+            const Text("click a picture to identify the sign"),
           if (_imageFile != null)
             Expanded(
               child: Padding(
